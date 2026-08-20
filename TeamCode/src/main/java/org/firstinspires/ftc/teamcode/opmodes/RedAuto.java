@@ -1,0 +1,46 @@
+package org.firstinspires.ftc.teamcode.opmodes;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.bylazar.telemetry.PanelsTelemetry;
+
+import org.firstinspires.ftc.teamcode.RobotContainer;
+import org.firstinspires.ftc.teamcode.lib.ftclib.opmode.CommandOpMode;
+import org.firstinspires.ftc.teamcode.lib.util.KTelemetry;
+
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Red_Auto", group = "Auto")
+public class RedAuto extends CommandOpMode {
+    private RobotContainer robotContainer;
+    private KTelemetry robotTelemetry;
+    private Timer timer = new Timer();
+
+    private double previousTime;
+
+    @Override
+    public void robotInit() {
+        robotTelemetry = new KTelemetry(telemetry, PanelsTelemetry.INSTANCE.getTelemetry(), FtcDashboard.getInstance().getTelemetry());
+        robotContainer = new RobotContainer(hardwareMap, robotTelemetry, gamepad1, gamepad2, OpModeConstants.RED_Auto, true); //Uses heavily modified untested hardware
+
+        timer.start();
+    }
+
+    @Override
+    public void robotPeriodic() {
+        super.robotPeriodic();
+        robotTelemetry.addData("Loop Time", 1.0 / (timer.get() - previousTime));
+        robotTelemetry.update(robotContainer.getTelemetryActive());
+        previousTime = timer.get();
+    }
+
+    @Override
+    public void enabledInit() {
+        robotContainer.getAutoCommand(OpModeConstants.RED_Auto).schedule();
+    }
+
+    @Override
+    public void disabledInit() {
+        CommandScheduler.getInstance().reset();
+    }
+}
