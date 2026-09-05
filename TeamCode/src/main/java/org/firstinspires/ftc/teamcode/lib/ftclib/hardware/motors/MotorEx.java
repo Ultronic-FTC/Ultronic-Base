@@ -20,6 +20,7 @@ public class MotorEx extends Motor {
      * The motor for the MotorEx class.
      */
     public DcMotorEx motorEx;
+    private double cachingTolerance = 0.02; // How much difference in power will cause a motor control call;
 
     /**
      * Constructs the instance motor for the wrapper
@@ -59,30 +60,13 @@ public class MotorEx extends Motor {
 
     @Override
     public void set(double output) {
-        motorEx.setPower(output);
+        if ((Math.abs(output - lastPower) > cachingTolerance) || (output == 0 && lastPower != 0)) {
+            lastPower = output;
+            motorEx.setPower(output);
 
+        }
     }
 
-    public void setVoltage(double volts) {
-        motorEx.setPower(volts / 12.0);
-    }
-
-    /**
-     * @param velocity the velocity in ticks per second
-     */
-    public void setVelocity(double velocity) {
-        set(velocity / ACHIEVABLE_MAX_TICKS_PER_SECOND);
-    }
-
-    /**
-     * Sets the velocity of the motor to an angular rate
-     *
-     * @param velocity  the angular rate
-     * @param angleUnit radians or degrees
-     */
-    public void setVelocity(double velocity, AngleUnit angleUnit) {
-        setVelocity(getCPR() * AngleUnit.RADIANS.fromUnit(angleUnit, velocity) / (2 * Math.PI));
-    }
 
     /**
      * @return the velocity of the motor in ticks per second
@@ -107,5 +91,19 @@ public class MotorEx extends Motor {
     public String getDeviceType() {
         return "Extended " + super.getDeviceType();
     }
+    /**
+     * @return the caching tolerance of the motor before it writes a new power to the motor
+     */
+    public double getCachingTolerance() {
+        return cachingTolerance;
+    }
 
+    /**
+     * @param cachingTolerance the new caching tolerance between motor writes
+     * @return this object for chaining purposes
+     */
+    public MotorEx setCachingTolerance(double cachingTolerance) {
+        this.cachingTolerance = cachingTolerance;
+        return this;
+    }
 }

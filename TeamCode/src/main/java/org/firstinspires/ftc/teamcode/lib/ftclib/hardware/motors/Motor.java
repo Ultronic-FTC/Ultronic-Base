@@ -226,6 +226,7 @@ public class Motor implements HardwareDevice {
     private boolean targetIsSet = false;
 
     protected double bufferFraction = 0.9;
+    protected double lastPower = 0;
 
     public Motor() {
     }
