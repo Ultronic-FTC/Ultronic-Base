@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.commands.DriveCommands;
 import org.firstinspires.ftc.teamcode.commands.TuneablePose;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.Drive;
 import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
 
 
+import java.util.Iterator;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -48,7 +50,15 @@ public class RobotContainer {
 
         driverController = new CommandGamepad(gamepad1);
 
-        voltage = () -> hwMap.voltageSensor.iterator().next().getVoltage();
+        voltage = () ->{
+            Iterator<VoltageSensor> sensors = hwMap.voltageSensor.iterator();
+            if (sensors.hasNext()) {
+                return sensors.next().getVoltage();
+            }
+            else {
+                return 12.0;
+            }
+        };
 
         // This needs to be before all the default commands lmao
         this.isRed = red;

@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -50,7 +51,9 @@ public class Mecanum extends Drivetrain {
         this.motorCachingThreshold = mecanumConstants.motorCachingThreshold;
         this.useBrakeModeInTeleOp = mecanumConstants.useBrakeModeInTeleOp;
 
-        voltageSensor = hardwareMap.voltageSensor.iterator().next();
+        Iterator<VoltageSensor> voltageSensors = hardwareMap.voltageSensor.iterator();
+
+        voltageSensor = voltageSensors.hasNext() ? voltageSensors.next() : null;
 
         leftFront = (DcMotorEx) hardwareMap.get(DcMotorEx.class, mecanumConstants.leftFrontMotorName);
         leftRear = (DcMotorEx) hardwareMap.get(DcMotorEx.class, mecanumConstants.leftRearMotorName);
@@ -260,7 +263,11 @@ public class Mecanum extends Drivetrain {
 
     @Override
     public double getVoltage() {
-        return voltageSensor.getVoltage();
+        if (voltageSensor == null) {
+            return nominalVoltage;
+        } else {
+            return voltageSensor.getVoltage();
+        }
     }
 
     private double getVoltageNormalized() {

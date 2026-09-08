@@ -11,6 +11,10 @@
 
 // Custom definitions may go here
 plugins {
+    // As of FTC SDK 11.2, the Android application plugin is applied here rather than in
+    // build.common.gradle. The version comes from the root build.gradle plugins block.
+    id 'com.android.application'
+
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id "edu.wpi.first.GradleRIO" version "2025.1.1-beta-1"
     id 'edu.wpi.first.WpilibTools' version '1.3.0'
