@@ -8,7 +8,6 @@
 // please think carefully as to whether such customizations are really necessary
 // before doing so.
 
-
 // Custom definitions may go here
 plugins {
     // As of FTC SDK 11.2, the Android application plugin is applied here rather than in
